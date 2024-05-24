@@ -1,0 +1,15 @@
+@startuml
+class SqliteManager {
+    - dbName: string
+    - _connection: SQLiteConnection
+    + Awake()
+    + DBInsert(data: BaseSqliteModel, exeUpdate: bool = true)
+    + DBInsertAll(data: List<BaseSqliteModel>)
+    + DBUpdate(data: BaseSqliteModel)
+    + DBSelectAll<T>(): List<T>
+}
+
+SqliteManager --> BaseSqliteModel
+SqliteManager --> SQLiteConnection
+MonoBehaviour <|-- SqliteManager
+@enduml

@@ -1,0 +1,8 @@
+@startuml
+class BackButtonHandler {
+    - homeManager: HomeManager
+    + OnClickBackButton()
+}
+
+BackButtonHandler --> HomeManager
+@enduml

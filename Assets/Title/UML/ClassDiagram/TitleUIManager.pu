@@ -1,0 +1,21 @@
+@startuml
+class TitleUIManager {
+    - signInPopUp: PopUpAnimatoins
+    - signUpPopUp: PopUpAnimatoins
+    - authCodePopUp: PopUpAnimatoins
+    - startButton: GameObject
+    - signIn_UpButton: GameObject
+    + OpenSignInPopUp()
+    + CloseSignInPopUp()
+    + OpenSignUpPopUp()
+    + CloseSignUpPopUp()
+    + OpenAuthCodePopUp()
+    + CloseAuthCodePopUp()
+    + DisplaySingIn_UpButton()
+    + NonDisplaySignIn_UpButton()
+    + DisplayStartButton()
+    + NonDisplayStartButton()
+}
+
+TitleUIManager --> PopUpAnimatoins
+@enduml

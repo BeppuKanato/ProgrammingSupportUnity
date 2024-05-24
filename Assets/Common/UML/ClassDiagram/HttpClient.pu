@@ -1,0 +1,28 @@
+@startuml
+
+class HttpClient {
+    - baseURL: string
+    - errorHandlers: FailedHanlers
+    + PostCoroutine(urlEndPoint: string, jsonData: string, successCallback: SuccessDelegate, failedCallback: FailedDelegate): IEnumerator
+    + GetCoroutine(urlEndPoint: string, jsonData: string, successCallBack: SuccessDelegate, failedCallBack: FailedDelegate): IEnumerator
+    - AfterConnectHandler(www: UnityWebRequest, successCallback: SuccessDelegate, failCallBack: FailedDelegate)
+    - SuccessHandler(responceJson: string, successCallBack: SuccessDelegate)
+    - FaildHandler(www: UnityWebRequest, failCallBack: FailedDelegate)
+}
+
+class SuccessDelegate {
+    +SuccessDelegate(string responceJson) : void
+}
+
+class FailedDelegate {
+    +FailedDelegate (string responceJson) : void
+}
+
+class FailedHanlers {
+    + Code422Handler(jsonData: string): string
+}
+
+HttpClient --> UnityWebRequest
+HttpClient --> FailedHanlers
+
+@enduml

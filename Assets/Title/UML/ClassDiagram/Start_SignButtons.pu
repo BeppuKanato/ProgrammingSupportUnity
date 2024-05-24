@@ -1,0 +1,12 @@
+@startuml
+class StartButton {
+    + LoadHomeScene()
+}
+
+class OpenPopUpButton {
+    - popUpPanel: PopUpAnimatoins
+    + OpenPopUp()
+}
+
+OpenPopUpButton --> PopUpAnimatoins
+@enduml

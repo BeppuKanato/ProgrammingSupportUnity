@@ -9,9 +9,7 @@ using System.Text.RegularExpressions;
 public class SubmitSignUP : BaseSendRequest
 {
     [SerializeField]
-    PopUpAnimatoins popUpPanel;
-    [SerializeField]
-    PopUpAnimatoins authCodePopUp;
+    TitleUIManager titleUIManager;
 
     [SerializeField]
     TMP_InputField emailInput;
@@ -45,20 +43,21 @@ public class SubmitSignUP : BaseSendRequest
     {
         Debug.Log("通信に成功しました");
         //ポップアップを自動的に閉じる
-        StartCoroutine(popUpPanel.ClosePopUpCoruotine());
-        StartCoroutine(authCodePopUp.OpenPopUpCoroutine());
+
+        titleUIManager.CloseSignUpPopUp();
+        titleUIManager.OpenAuthCodePopUp();
     }
 
     protected override void Code422Handler(string jsonData)
     {
-        ReceiveData receiveData = new ReceiveData();
-        receiveData = (ReceiveData)receiveData.Deserialize(jsonData);
+        ValidateErrorData receiveData = new ValidateErrorData();
+        receiveData = (ValidateErrorData)receiveData.Deserialize(jsonData);
 
         SetValidateErrorMessages(receiveData);
     }
 
     //バリデーションのエラーメッセージを表示
-    void SetValidateErrorMessages(ReceiveData receiveData)
+    void SetValidateErrorMessages(ValidateErrorData receiveData)
     {
         emailErrorText.text = receiveData.email == null ? "" : receiveData.email[0];
         nameErrorText.text = receiveData.name == null ? "" : receiveData.name[0];
@@ -84,7 +83,7 @@ public class SubmitSignUP : BaseSendRequest
     }
 
     [Serializable]
-    private class ReceiveData : BaseReceiveData
+    private class ValidateErrorData : BaseReceiveData
     {
         public string[] name;
         public string[] email;
@@ -94,7 +93,7 @@ public class SubmitSignUP : BaseSendRequest
         public override BaseReceiveData Deserialize(string jsonData)
         {
             Debug.Log(jsonData);
-            ReceiveData receiveData = JsonUtility.FromJson<ReceiveData>(jsonData);
+            ValidateErrorData receiveData = JsonUtility.FromJson<ValidateErrorData>(jsonData);
 
             return receiveData;
         }

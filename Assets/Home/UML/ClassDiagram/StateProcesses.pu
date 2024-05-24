@@ -1,0 +1,21 @@
+@startuml
+class BaseHomeProcess {
+    +Enter() : void
+    +Process() : int
+    +Exit() : void
+    +GetState() : int
+}
+
+class LearningModeStateProcess {
+}
+class HomeStateProcess {
+    +ChangeNextStateToLearnMode() : void
+    +ChangeNextStateToConnection() :void
+}
+
+StateProcessInterface <|.. BaseHomeProcess
+BaseHomeProcess <|-- LearningModeStateProcess
+BaseHomeProcess <|-- HomeStateProcess
+
+StateMachine --> StateProcessInterface
+@enduml

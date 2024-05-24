@@ -1,0 +1,16 @@
+@startuml
+class HomeManager {
+    - currentState: HomeUIStateEnum
+    - nextState: HomeUIStateEnum
+    - homeStateProcess: HomeStateProcess
+    - learningModeProcess: LearningModeStateProcess
+    - stateMachine: StateMachine
+    - processes: Dictionary<HomeUIStateEnum, BaseHomeProcess>
+    + InitializeProcess(first: StateProcessInterface)
+    + StateManagement(current: StateProcessInterface, next: StateProcessInterface)
+    + ChangeToPreveState() : void
+    - SetProcessesDictionary() : void
+}
+
+MonoBehaviour <|-- HomeManager
+BaseHomeProcess <|-- HomeManager

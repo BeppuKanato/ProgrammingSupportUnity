@@ -1,0 +1,16 @@
+@startuml
+
+class TitleManager {
+    - titleUIManager: TitleUIManager
+    - autoSignIn: AutoSignIn
+    - statusText: TMP_Text
+    + Start()
+    + SetUIAtSeccessAuth(name: string)
+    + SetUIAtFailedAuth()
+}
+
+MonoBehaviour <|-- TitleManager
+TitleManager -- AutoSignIn
+TitleManager <-- TitleUIManager 
+
+@enduml

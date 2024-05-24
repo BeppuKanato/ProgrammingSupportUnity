@@ -1,0 +1,147 @@
+@startuml
+title AuthCode
+title SignUp
+title SignIn
+title AutoAuth
+
+class SubmitAuthCode {
+    - titleUIManager: TitleUIManager
+    - emailInput: TMP_InputField
+    - codeInput: TMP_InputField
+    - emailErrorText: TMP_Text
+    - codeErrorText: TMP_Text
+    # SendRequest()
+    # SuccessCallback(jsonData: string)
+    # Code422Handler(jsonData: string)
+    - SetValidateErrorMessage(receiveData: ValidateErrorData)
+}
+
+namespace AuthCode {
+    -class SendData {
+        + email: string
+        + code: string
+        + SendData(email: string, code: string)
+    }
+
+    -class ValidateErrorData {
+        + email: string[]
+        + code: string[]
+        + Deserialize(jsonData: string): BaseReceiveData
+    }
+}
+
+class SubmitSignUP {
+    - titleUIManager: TitleUIManager
+    - emailInput: TMP_InputField
+    - nameInput: TMP_InputField
+    - passwordInput: TMP_InputField
+    - checkPassordInput: TMP_InputField
+    - emailErrorText: TextMeshProUGUI
+    - nameErrorText: TextMeshProUGUI
+    - passwordErrorText: TextMeshProUGUI
+    - checkPasswordErrorText: TextMeshProUGUI
+    + SendRequest()
+    + SuccessCallback(jsonData: string)
+    + Code422Handler(jsonData: string)
+    - SetValidateErrorMessages(receiveData: ValidateErrorData)
+}
+
+namespace SignUp {
+    -class SendData {
+        + name: string
+        + email: string
+        + password: string
+        + checkPassword: string
+        + SendData(name: string, email: string, password: string, checkPassword: string)
+    }
+
+    -class ValidateErrorData {
+        + name: string[]
+        + email: string[]
+        + password: string[]
+        + checkPassword: string[]
+        + Deserialize(jsonData: string): BaseReceiveData
+    }
+}
+
+class SubmitSignIn {
+    - titleManager: TitleManager
+    - titleUIManager: TitleUIManager
+    - sqliteManager: SqliteManager
+    - emailInput: TMP_InputField
+    - passwordInput: TMP_InputField
+    - emailErrorText: TMP_Text
+    - passwordErrorText: TMP_Text
+    # SendRequest()
+    # SuccessCallback(jsonData: string)
+    # Code422Handler(jsonData: string)
+    - SetValidateErrorMessages(receiveData: ValidateErrorData)
+}
+
+namespace SignIn {
+    -class SendData {
+        + email: string
+        + password: string
+        + SendData(email: string, password: string)
+    }
+
+    -class ValidateErrorData {
+        + email: string[]
+        + password: string[]
+        + Deserialize(jsonData: string): BaseReceiveData
+    }
+
+    -class ResponceData {
+        + id: string
+        + email: string
+        + name: string
+        + remember_token: string
+        + Deserialize(jsonData: string): BaseReceiveData
+    }
+}
+
+class AutoSignIn {
+    - sqliteManager: SqliteManager
+    - titleUIManager: TitleUIManager
+    - titleManager: TitleManager
+    - userData: User
+    + GetUserDataCotourine(): IEnumerator
+    + SendRequest()
+    + SuccessCallback(jsonData: string)
+    + Code422Handler(jsonData: string)
+}
+
+namespace AutoAuth {
+    -class SendData {
+        + id: string
+        + rememberToken: string
+        + SendData(id: string, rememberToken: string)
+    }
+}
+
+BaseSendData <|-- AuthCode.SendData
+BaseReceiveData <|-- AuthCode.ValidateErrorData
+BaseSendRequest <|-- SubmitAuthCode
+SubmitAuthCode +-- AuthCode.SendData
+SubmitAuthCode +-- AuthCode.ValidateErrorData
+
+BaseSendData <|-- SignUp.SendData
+BaseReceiveData <|-- SignUp.ValidateErrorData
+BaseSendRequest <|-- SubmitSignUP
+SubmitSignUP +-- SignUp.SendData
+SubmitSignUP +-- SignUp.ValidateErrorData
+
+BaseSendData <|-- SignIn.SendData
+BaseReceiveData <|-- SignIn.ValidateErrorData
+BaseReceiveData <|-- SignIn.ResponceData
+BaseSendRequest <|-- SubmitSignIn
+SubmitSignIn +-- SignIn.SendData
+SubmitSignIn +-- SignIn.ResponceData
+SubmitSignIn +-- SignIn.ValidateErrorData
+
+BaseSendData <|-- AutoAuth.SendData
+BaseSendRequest <|-- AutoSignIn
+AutoSignIn --> User
+AutoSignIn +-- AutoAuth.SendData
+
+@enduml

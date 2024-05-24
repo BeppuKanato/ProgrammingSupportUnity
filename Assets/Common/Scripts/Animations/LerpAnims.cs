@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class LerpAnims
@@ -23,7 +24,7 @@ public class LerpAnims
         }
     }
     //Lerpを使用してポジションを変更する
-    public IEnumerator LerpPositionCoroutine(Vector3 origin, Vector3 target, GameObject animObj)
+    public IEnumerator LerpLocalPositionCoroutine(Vector3 origin, Vector3 target, GameObject animObj)
     {
         float rate = 0f;
 
@@ -31,8 +32,7 @@ public class LerpAnims
         while (rate < 1)
         {
             Vector3 newPosition = Vector3.Lerp(origin, target, rate);
-
-            animObj.transform.position = newPosition;
+            animObj.transform.localPosition = newPosition;
 
             rate += Time.deltaTime * animSpeed;
 

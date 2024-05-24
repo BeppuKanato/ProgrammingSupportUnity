@@ -8,7 +8,7 @@ using UnityEngine;
 public class SubmitAuthCode : BaseSendRequest
 {
     [SerializeField]
-    PopUpAnimatoins popUpPanel;
+    TitleUIManager titleUIManager;
 
     [SerializeField]
     TMP_InputField emailInput;
@@ -31,18 +31,18 @@ public class SubmitAuthCode : BaseSendRequest
     protected override void SuccessCallback(string jsonData)
     {
         Debug.Log("í êMÇ…ê¨å˜ÇµÇ‹ÇµÇΩ");
-        StartCoroutine(popUpPanel.ClosePopUpCoruotine());
+        titleUIManager.CloseAuthCodePopUp();
     }
 
     protected override void Code422Handler(string jsonData)
     {
-        ReceiveData receiveData = new ReceiveData();
-        receiveData = (ReceiveData)receiveData.Deserialize(jsonData);
+        ValidateErrorData receiveData = new ValidateErrorData();
+        receiveData = (ValidateErrorData)receiveData.Deserialize(jsonData);
 
         SetValidateErrorMessage(receiveData);
     }
 
-    void SetValidateErrorMessage(ReceiveData receiveData)
+    void SetValidateErrorMessage(ValidateErrorData receiveData)
     {
         emailErrorText.text = receiveData.email == null ? "" : receiveData.email[0];
         codeErrorText.text = receiveData.code == null ? "" : receiveData.code[0];
@@ -62,14 +62,14 @@ public class SubmitAuthCode : BaseSendRequest
     }
 
     [Serializable]
-    private class ReceiveData : BaseReceiveData
+    private class ValidateErrorData : BaseReceiveData
     {
         public string[] email;
         public string[] code;
 
         public override BaseReceiveData Deserialize(string jsonData)
         {
-            ReceiveData receiveData = (ReceiveData)JsonUtility.FromJson<ReceiveData>(jsonData);
+            ValidateErrorData receiveData = (ValidateErrorData)JsonUtility.FromJson<ValidateErrorData>(jsonData);
 
             return receiveData;
         }

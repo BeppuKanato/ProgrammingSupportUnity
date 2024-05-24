@@ -81,8 +81,10 @@ public class HttpClient : MonoBehaviour
     {
         switch(www.responseCode)
         {
+            //サイトが存在しないエラー
             case 404:
                 break;
+            //入力された情報が正しくない時
             case 422:
                 string messageJson = errorHandlers.Code422Handler(www.downloadHandler.text);
                 failCallBack(messageJson, www.responseCode);
