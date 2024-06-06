@@ -29,11 +29,16 @@ public class HttpClient : MonoBehaviour
             www.uploadHandler = new UploadHandlerRaw(jsonBytes);
             www.downloadHandler = new DownloadHandlerBuffer();
 
+            Coroutine checkProgressCoroutine = StartCoroutine(CheckProgressCoroutine(www));
+
             //ポストリクエストを送信
             yield return www.SendWebRequest();
 
             //通信終了
             AfterConnectHandler(www, successCallback, failedCallback);
+
+            //進捗表示コルーチンを終了
+            StopCoroutine(checkProgressCoroutine);
         }
     }
     //httpのGetメソッドを実行
@@ -93,6 +98,19 @@ public class HttpClient : MonoBehaviour
                 Debug.Log("対策していない例外が発生しました");
                 Debug.Log($"ステータスコード = {www.responseCode}");
                 break;
+        }
+    }
+
+    private IEnumerator CheckProgressCoroutine(UnityWebRequest www)
+    {
+        while (!www.isDone)
+        {
+            Debug.Log($"uploadProgress = {www.uploadProgress} downloadProgress = {www.downloadProgress}");
+            float totalProgress = (www.uploadProgress + www.downloadProgress) / 2.0f;
+
+            Debug.Log(totalProgress);
+
+            yield return null;
         }
     }
 }

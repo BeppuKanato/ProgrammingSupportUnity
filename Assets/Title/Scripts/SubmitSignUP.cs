@@ -30,7 +30,7 @@ public class SubmitSignUP : BaseSendRequest
     TextMeshProUGUI checkPasswordErrorText;
 
     //ボタンが押された時通信を行う
-    protected override void SendRequest()
+    public override void SendRequest()
     {
         Debug.Log("signUP");
         SendData sendData = new SendData(this.nameInput.text, this.emailInput.text, this.passwordInput.text, this.checkPassordInput.text);

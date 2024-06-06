@@ -19,7 +19,7 @@ public class SubmitAuthCode : BaseSendRequest
     TMP_Text emailErrorText;
     [SerializeField]
     TMP_Text codeErrorText;
-    protected override void SendRequest()
+    public override void SendRequest()
     {
         SendData sendData = new SendData(emailInput.text, codeInput.text);
 

@@ -28,7 +28,7 @@ public class SubmitSignIn :BaseSendRequest
     TMP_Text passwordErrorText;
 
 
-    protected override void SendRequest()
+    public override void SendRequest()
     {
         SendData sendData = new SendData(emailInput.text, passwordInput.text);
         string sendJson = sendData.Serialize();

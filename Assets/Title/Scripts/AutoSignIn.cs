@@ -30,7 +30,7 @@ public class AutoSignIn : BaseSendRequest
     }
 
     //RememberToken‚ª³‚µ‚¢‚à‚Ì‚©‚ğŠm”F
-    protected override void SendRequest()
+    public override void SendRequest()
     {
         SendData sendData = new SendData(userData.id.ToString(), userData.remember_token);
         string sendJson = sendData.Serialize();

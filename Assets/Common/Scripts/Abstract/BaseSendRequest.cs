@@ -10,7 +10,7 @@ public abstract class BaseSendRequest : MonoBehaviour
     [SerializeField]
     protected string urlEndPoint;
     //通信を要求するメソッド
-    protected abstract void SendRequest();
+    public abstract void SendRequest();
     //通信成功時のコールバック
     protected abstract void SuccessCallback(string jsonData);
     //通信失敗時のコールバック

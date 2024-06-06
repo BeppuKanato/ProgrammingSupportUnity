@@ -16,6 +16,13 @@ public class TitleManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(autoSignIn.GetUserDataCotourine());
+
+        int sum = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            sum += i;
+        }
+        Debug.Log(sum);
     }
     //”FØ‚É¬Œ÷‚µ‚½ê‡‚ÌUI•\Ž¦
     public void SetUIAtSeccessAuth(string name)
