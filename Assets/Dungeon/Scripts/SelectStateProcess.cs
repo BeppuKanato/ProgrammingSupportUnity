@@ -35,6 +35,12 @@ public class SelectStateProcess : BaseDungeonProcess
     {
         for (int i = 0; i < branchButtonTexts.Count; i++)
         {
+            //選択肢の数がボタンの数より多い場合
+            if (branchButtonTexts.Count < branchContents.Count)
+            {
+                Debug.LogError("選択肢の数が上限を超えています");
+                break;
+            }
             //選択肢の内容がある場合
             if (i < branchContents.Count)
             {
