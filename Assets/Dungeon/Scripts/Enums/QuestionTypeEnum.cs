@@ -5,7 +5,7 @@ using UnityEngine;
 public enum QuestionTypeEnum
 {
     None,
-    Select = 1, //‘I‘ð–â‘è
-    Input = 2,  //“ü—Í–â‘è
-    Fill = 3,   //ŒŠ–„‚ß–â‘è
+    Select = 101, //‘I‘ð–â‘è
+    Input = 102,  //“ü—Í–â‘è
+    Fill = 103,   //ŒŠ–„‚ß–â‘è
 }

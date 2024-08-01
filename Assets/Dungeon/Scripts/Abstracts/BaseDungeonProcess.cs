@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
 {
+    [field: SerializeField]
+    public DungeonManager dungeonManager { get; private set; }
     [SerializeField]
     DungeonUIManager dungeonUIManager;              //ダンジョンシーンで共通のUIの処理を行う
-    [SerializeField]
-    DungeonStateEnum state;                         //クラスが処理を担当する状態
+    [field: SerializeField]
+    protected DungeonStateEnum state; //クラスが処理を担当する状態
     [SerializeField]
     protected DungeonStateEnum nextState;           //Process処理で返す状態
 
@@ -17,11 +21,20 @@ public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
     [SerializeField]
     protected QuestionTypeEnum nextQuestionType = QuestionTypeEnum.Input;    //次の問題の形式
 
+    LerpAnims lerpAnims = new LerpAnims();
+
+    [SerializeField]
+    Image correctImage;
+    [SerializeField]
+    Image inCorrectImage;
+
+    protected virtual void Start()
+    {
+        
+    }
     public virtual void Enter()
     {
-        //processで返す状態を自分に設定
-        //状態の変更が無い場合は次の状態が自分になるように
-        nextState = state;
+        this.nextState = state;
     }
 
     public virtual int Process()
@@ -34,29 +47,9 @@ public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
 
     }
 
-    public virtual int GetState()
+    public virtual int GetStateInt()
     {
         return (int)this.state;
-    }
-
-    //次の状態を決定する、状態列挙体のint型を返す
-    protected DungeonStateEnum DecideNextState()
-    {
-        DungeonStateEnum result = DungeonStateEnum.None;
-        switch (nextQuestionType)
-        {
-            case QuestionTypeEnum.Select:
-                result = DungeonStateEnum.Select;
-                break;
-            case QuestionTypeEnum.Input:
-                result = DungeonStateEnum.Input;
-                break;
-            case QuestionTypeEnum.Fill:
-                result = DungeonStateEnum.Fill;
-                break;
-        }
-
-        return result;
     }
 
     //必要な情報を問題データから抜き出す
@@ -77,5 +70,36 @@ public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
     private void SetQuestionContent(string content)
     {
         this.dungeonUIManager.SetQuestionContentText(content);
+    }
+
+    /// <summary>
+    /// 回答が正解の場合の処理です
+    /// </summary>
+    protected void ResultCorrect()
+    {
+        Vector3 targetScale = new Vector3(2, 2);
+        this.correctImage.gameObject.SetActive(true);
+        StartCoroutine(this.lerpAnims.LerpScaleCoroutine(this.correctImage.gameObject.transform.localScale, targetScale, this.correctImage.gameObject, () =>
+        {
+            this.correctImage.gameObject.SetActive(false);
+            this.correctImage.gameObject.transform.localScale = Vector3.zero;
+
+            //次の状態に遷移する
+            this.nextState = DungeonStateEnum.ChangeQuestion;
+        }));
+    }
+
+    /// <summary>
+    /// 回答が不正解の場合の処理です
+    /// </summary>
+    protected void ResultInCorrect()
+    {
+        Vector3 targetScale = new Vector3(2, 2);
+        this.inCorrectImage.gameObject.SetActive(true);
+        StartCoroutine(this.lerpAnims.LerpScaleCoroutine(this.inCorrectImage.transform.localScale, targetScale, this.inCorrectImage.gameObject, () =>
+        {
+            this.inCorrectImage.gameObject.SetActive(false);
+            this.inCorrectImage.gameObject.transform.localScale = Vector3.zero;
+        }));
     }
 }

@@ -32,22 +32,18 @@ public class HomeManager : MonoBehaviour
         currentState = HomeUIStateEnum.Home;
         nextState = currentState;
 
-        stateMachine.InitializeProcess(processes[currentState]);
+        //stateMachine.InitializeProcess(processes[currentState]);
     }
     void Update()
     {
-        //ステートマシーンを実行、次に進む状態が返ってくる
-        HomeUIStateEnum resultState = (HomeUIStateEnum)stateMachine.StateManagement(processes[currentState], processes[nextState]);
-
-        //processの実行によって進む状態が変化した場合
-        if (nextState != resultState)
+        HomeUIStateEnum processResult = (HomeUIStateEnum)stateMachine.ExecuteProcess(processes[currentState]);
+        Debug.Log($"Dungeon Manager Process Result = {processResult}");
+        //Processを実行した結果、状態が変化する場合
+        if ((HomeUIStateEnum)processes[currentState].GetStateInt() != processResult)
         {
-            //nextを次状態に設定
-            nextState = resultState;
-        }
-        else
-        {
-            currentState = resultState;
+            //状態を変更する
+            stateMachine.ChangeState(processes[currentState], processes[processResult]);
+            currentState = processResult;
         }
     }
     //辞書型配列にプロセスを設定

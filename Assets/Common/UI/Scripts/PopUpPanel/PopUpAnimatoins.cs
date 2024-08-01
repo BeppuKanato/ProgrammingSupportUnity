@@ -20,7 +20,7 @@ public class PopUpAnimatoins : MonoBehaviour
         Vector3 originScale = new Vector3(popUpPanel.transform.localScale.x, popUpPanel.transform.localScale.y, popUpPanel.transform.localScale.z);
         Vector3 targetScale = new Vector3(panelXScale, panelYScale, 0);
 
-        yield return StartCoroutine(lerpScaleAnim.LerpScaleCoroutine(originScale, targetScale, popUpPanel.gameObject));
+        yield return StartCoroutine(lerpScaleAnim.LerpScaleCoroutine(originScale, targetScale, popUpPanel.gameObject, () => { }, false));
     }
     //ポップアップを閉じるアニメーション
     public IEnumerator ClosePopUpCoruotine()
@@ -30,7 +30,7 @@ public class PopUpAnimatoins : MonoBehaviour
         //目標スケール
         Vector3 targetScale = new Vector3(0, 0, 0);
 
-        yield return StartCoroutine(lerpScaleAnim.LerpScaleCoroutine(originScale, targetScale, popUpPanel.gameObject));
+        yield return StartCoroutine(lerpScaleAnim.LerpScaleCoroutine(originScale, targetScale, popUpPanel.gameObject, () => { }, false));
 
         popUpPanel.gameObject.SetActive(false);
     }

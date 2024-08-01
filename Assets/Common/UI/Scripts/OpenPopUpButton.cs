@@ -8,9 +8,9 @@ public class OpenPopUpButton : MonoBehaviour
     PopUpAnimatoins popUpPanel;
 
     [SerializeField]
-    float panelXScale = 0.6f;
+    float panelXScale = 0.7f;
     [SerializeField]
-    float panelYScale = 0.6f;
+    float panelYScale = 0.7f;
     //ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Ìˆ—
     public void OpenPopUp()
     {

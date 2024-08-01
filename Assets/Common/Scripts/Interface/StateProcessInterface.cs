@@ -8,5 +8,5 @@ public interface StateProcessInterface
     public void Enter();    //ó‘Ô‚É“ü‚Á‚½‚Ìˆ—
     public int Process();  //ó‘Ô’†‚Ìˆ—
     public void Exit();     //ó‘Ô‚ªI—¹‚·‚é‚Ìˆ—
-    public int GetState();  //ó‘Ô‚ğ•Ô‚·
+    public int GetStateInt();  //ó‘Ô‚ğ•Ô‚·
 }

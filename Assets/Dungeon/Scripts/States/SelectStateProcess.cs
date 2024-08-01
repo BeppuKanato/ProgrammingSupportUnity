@@ -11,9 +11,25 @@ public class SelectStateProcess : BaseDungeonProcess
     [SerializeField]
     List<string> branchContents;    //選択肢の内容の文字列
 
+    [SerializeField]
+    GameObject choiceParent;
+
+    protected override void Start()
+    {
+        this.state = DungeonStateEnum.Select;
+    }
     public override void Enter()
     {
         base.Enter();
+        this.PickUpNeedData(this.dungeonManager.GetNowQuestion());
+
+        this.choiceParent.SetActive(true);
+    }
+
+    public override void Exit() 
+    {
+        this.choiceParent.SetActive(false); 
+        base.Exit();
     }
 
     //選択肢のボタンが押されたときの処理
@@ -22,18 +38,18 @@ public class SelectStateProcess : BaseDungeonProcess
         //押されたボタンの文字と正解の文字列が同じ時
         if (buttonText.text == this.answerContents[0])
         {
-            Debug.Log("True");
-            this.nextState = this.DecideNextState();
+            this.ResultCorrect();
         }
         else
         {
-            Debug.Log("False");
+            this.ResultInCorrect();
         }
     }
 
     //選択肢のボタンのテキストを設定する
     private void FillBranchText()
     {
+        Debug.Log("ボタンのテキストを設定します");
         for (int i = 0; i < branchButtonTexts.Count; i++)
         {
             //選択肢の数がボタンの数より多い場合
@@ -46,12 +62,16 @@ public class SelectStateProcess : BaseDungeonProcess
             if (i < branchContents.Count)
             {
                 branchButtonTexts[i].SetText(branchContents[i]);
-                branchButtonTexts[i].gameObject.SetActive(true);
+                branchButtonTexts[i].gameObject.transform.parent.gameObject.SetActive(true);
+                Debug.Log($"i = {i}, 選択肢 = {branchContents.Count}");
+                Debug.Log($"{i < branchContents.Count}");
             }
             //選択肢の内容が無い場合
             else
             {
-                branchButtonTexts[i].gameObject.SetActive(false);
+                branchButtonTexts[i].gameObject.transform.parent.gameObject.SetActive(false);
+
+                Debug.Log($"オーバーしています i = {i}, 選択肢 = {branchContents.Count}");
             }
         }
     }

@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DungeonManager : MonoBehaviour
 {
     [SerializeField]
-    List<DungeonDataStruct> dungeonData;
+    List<DungeonDataStruct> dungeonData = new List<DungeonDataStruct>();
     [SerializeField]
     StateMachine stateMachine;
 
     [SerializeField]
+    ConnectStateProcess connectStateProcess;
+    [SerializeField]
     SelectStateProcess selectStateProcess;
     [SerializeField]
     FillStateProcess fillStateProcess;
+    [SerializeField]
+    ChangeQuestionStateProcess changeQuestionStateProcess;
 
-    //processに処理クラスを全てまとめたいなら、
-    //DungeonStateEnumにSelectなどの問題タイプ + Connectなどの前準備の状態
-    //その必要がないなら問題のタイプの処理の辞書と前準備などの処理を分けるべきかも
     Dictionary<DungeonStateEnum, BaseDungeonProcess> processes;
 
+    [SerializeField]
     DungeonStateEnum currentState;
-    DungeonStateEnum nextState;
+
+    int nowQuestionIndex;
+
     private void Awake()
     {
         processes = new Dictionary<DungeonStateEnum, BaseDungeonProcess>();
@@ -30,50 +35,80 @@ public class DungeonManager : MonoBehaviour
     void Start()
     {
         this.SetProcessesDictionary();
+        this.nowQuestionIndex = 0;
 
-        currentState = DungeonStateEnum.Select;
-        //currentState = nextState;
-        nextState = currentState;
+        currentState = DungeonStateEnum.Connect;
+        processes[currentState].Enter();
     }
 
     public void SetDungeonData(List<DungeonDataStruct> dungeonData)
     {
-        this.dungeonData = dungeonData;
+        this.dungeonData = new List<DungeonDataStruct> (dungeonData);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentState);
-        DungeonStateEnum resultState = (DungeonStateEnum)stateMachine.StateManagement(processes[currentState], processes[nextState]);
-
-        //processの実行によって次の状態が変化した時
-        if (nextState != resultState)
+        DungeonStateEnum processResult = (DungeonStateEnum)stateMachine.ExecuteProcess(processes[currentState]);
+        //Processを実行した結果、状態が変化する場合
+        if ((DungeonStateEnum)processes[currentState].GetStateInt() != processResult)
         {
-            //nextStateを返ってきた状態に設定
-            nextState = resultState;
+            Debug.Log($"current = {currentState}, result = {processResult}");
+            //状態を変更する
+            stateMachine.ChangeState(processes[currentState], processes[processResult]);
+            currentState = processResult;
         }
-        else
-        {
-            currentState = resultState;
-        }
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            Debug.Log(dungeonData[0].question_type);
-            BaseDungeonProcess typeProcess = processes[(DungeonStateEnum)dungeonData[0].question_type];
-
-            typeProcess.PickUpNeedData(dungeonData[0]);
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log($"次の状態 = {processes[(DungeonStateEnum)dungeonData[0].question_type].Process()}");
-        }
-
     }
 
     public void SetProcessesDictionary()
     {
+        processes.Add(DungeonStateEnum.Connect, connectStateProcess);
         processes.Add(DungeonStateEnum.Select, selectStateProcess);
         processes.Add(DungeonStateEnum.Fill, fillStateProcess);
+        processes.Add(DungeonStateEnum.ChangeQuestion, changeQuestionStateProcess);
+    }
+
+    /// <summary>
+    /// 現在の問題のデータを返します
+    /// </summary>
+    /// <returns>問題のデータ</returns>
+    public DungeonDataStruct GetNowQuestion()
+    {
+        return this.dungeonData[this.nowQuestionIndex];
+    }
+
+    /// <summary>
+    /// 次の問題の種類を返します
+    /// </summary>
+    /// <returns>次の問題の種類</returns>
+    public QuestionTypeEnum GetNextQuestionType()
+    {
+        //問題が全て終了した場合
+        if (this.nowQuestionIndex + 1 >= this.dungeonData.Count)
+        {
+            return QuestionTypeEnum.None;
+        }
+
+        return (QuestionTypeEnum)this.dungeonData[this.nowQuestionIndex + 1].question_type;
+    }
+
+    /// <summary>
+    /// ダンジョン情報が登録済みかを返す
+    /// </summary>
+    /// <returns>登録済み = true, 未登録 = false</returns>
+    public bool SetedDungeonData()
+    {
+        bool result = false;
+        if (this.dungeonData.Count > 0)
+        {
+            result = true;
+        }
+
+        return result;
+    }
+
+    public void IncrementQuestionIndex()
+    {
+        this.nowQuestionIndex++;
     }
 }

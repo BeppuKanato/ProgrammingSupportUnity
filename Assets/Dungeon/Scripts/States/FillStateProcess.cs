@@ -5,10 +5,32 @@ using UnityEngine;
 
 public class FillStateProcess : BaseDungeonProcess
 {
+    [SerializeField]
     //穴の個数分の回答入力用テキスト
     List<TMP_InputField> answerFields;
+    [SerializeField]
+    GameObject fieldsParent;
     //穴の番号のリスト
     List<int> blanckNumbers;
+
+    protected override void Start()
+    {
+        this.state = DungeonStateEnum.Fill;
+        base.Start();
+    }
+
+    public override void Enter()
+    {
+        this.fieldsParent.SetActive(true);
+        this.PickUpNeedData(this.dungeonManager.GetNowQuestion());
+        base.Enter();
+    }
+
+    public override void Exit()
+    {
+        this.fieldsParent.SetActive(false);
+        base.Exit();
+    }
 
     //InputFieldの表示非表示を設定する
     private void SetEnableAnserFields()
@@ -25,11 +47,11 @@ public class FillStateProcess : BaseDungeonProcess
             //i番目の回答が必要な時
             if (i < this.blanckNumbers.Count)
             {
-                answerFields[i].enabled = true;
+                answerFields[i].gameObject.SetActive(true);
             }
             else
             {
-                answerFields[i].enabled = false;
+                answerFields[i].gameObject.SetActive(false);
             }
         }
     }

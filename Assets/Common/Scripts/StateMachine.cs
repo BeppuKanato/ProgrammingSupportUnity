@@ -1,33 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
     public IntStack stateHistory { get; private set; }  //遷移履歴を保存するスタック
-    //最初の状態でのEnterを実行する
-    public void InitializeProcess(StateProcessInterface first)
+
+    private void Start()
     {
         stateHistory = new IntStack();
-        first.Enter();
-        stateHistory.Push(first.GetState());    //履歴に保存
     }
-    //状態の管理を行う
-    public int StateManagement(StateProcessInterface current, StateProcessInterface next) 
+    //引数の処理クラスのProcessを実行
+    public int ExecuteProcess(StateProcessInterface currentStateProcess)
     {
-        //与えられた状態がことなる場合
-        if (current.GetState() != next.GetState())
+        return currentStateProcess.Process();
+    }
+    //currentからnextへの状態遷移に必要な処理を実行
+    public void ChangeState(StateProcessInterface currentStateProess, StateProcessInterface nextStateProcess)
+    {
+        currentStateProess.Exit();                              //現在の状態の抜ける時の処理
+        nextStateProcess.Enter();                               //次の状態の入る時の処理
+
+        this.HandleStateHistory(currentStateProess.GetStateInt(), nextStateProcess.GetStateInt());
+    }
+    //履歴の更新の管理を行う
+    private void HandleStateHistory(int currentStateInt, int nextStateInt)
+    {
+        //最新の履歴を取得
+        int lastInt = this.stateHistory.GetStackContent().LastOrDefault();
+
+        //次の状態と最新の状態が同じ場合、状態を戻すと判断
+        if (nextStateInt != lastInt)
         {
-            current.Exit();
-            next.Enter();
-
-            stateHistory.Push(current.GetState()); //履歴に保存
-
-            return next.GetState();
+            stateHistory.Push(currentStateInt);
         }
-        //現在の状態の処理を実行
-        int nextState = current.Process();
-
-        return nextState;
+        else
+        {
+            stateHistory.Pop();
+        }
     }
 }

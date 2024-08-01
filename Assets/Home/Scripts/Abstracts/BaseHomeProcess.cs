@@ -6,6 +6,8 @@ using UnityEngine.Video;
 public abstract class BaseHomeProcess : MonoBehaviour, StateProcessInterface
 {
     [SerializeField]
+    DungeonManager dungeonManager;
+    [SerializeField]
     GameObject buttons;     //表示するボタンを子に持つオブジェクト
     [SerializeField]
     HomeUIStateEnum state;  //クラスが処理を担当する状態
@@ -29,7 +31,7 @@ public abstract class BaseHomeProcess : MonoBehaviour, StateProcessInterface
         nextState = state;
         buttons.SetActive(true);
         Debug.Log($"{lerpAnims}");
-        StartCoroutine(this.lerpAnims.LerpLocalPositionCoroutine(nonDisplayPos, displayPos, buttons));
+        StartCoroutine(this.lerpAnims.LerpLocalPositionCoroutine(nonDisplayPos, displayPos, buttons, () => { }));
     }
 
     public virtual int Process()
@@ -42,7 +44,7 @@ public abstract class BaseHomeProcess : MonoBehaviour, StateProcessInterface
         buttons.SetActive(false);
     }
 
-    public virtual int GetState()
+    public virtual int GetStateInt()
     {
         return (int)this.state;
     }

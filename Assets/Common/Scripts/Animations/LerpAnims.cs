@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class LerpAnims
 {
+    //アニメーション終了後のコールバック用デリゲート
+    public delegate void LerpAnimDelegate();
+
     float animSpeed = 4f;
     //Lerpを使用してスケールを変更する
-    public IEnumerator LerpScaleCoroutine(Vector3 origin, Vector3 target, GameObject animObj)
+    public IEnumerator LerpScaleCoroutine(Vector3 origin, Vector3 target, GameObject animObj, LerpAnimDelegate callback, bool useWait = true)
     {
         float rate = 0f;
 
@@ -22,9 +25,17 @@ public class LerpAnims
 
             yield return null;
         }
+
+        //少し待つ場合
+        if (useWait)
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        callback();
     }
     //Lerpを使用してポジションを変更する
-    public IEnumerator LerpLocalPositionCoroutine(Vector3 origin, Vector3 target, GameObject animObj)
+    public IEnumerator LerpLocalPositionCoroutine(Vector3 origin, Vector3 target, GameObject animObj, LerpAnimDelegate callback)
     {
         float rate = 0f;
 
@@ -38,5 +49,7 @@ public class LerpAnims
 
             yield return null;
         }
+
+        callback();
     }
 }
