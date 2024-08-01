@@ -17,9 +17,14 @@ public class TitleUIManager : MonoBehaviour
     [SerializeField]
     GameObject signIn_UpButton;     //サインイン、サインアップボタン
 
+    [SerializeField]
+    float panelXScale = 0.6f;
+    [SerializeField]
+    float panelYScale = 0.6f;
+
     public void OpenSignInPopUp()
     {
-        StartCoroutine(signInPopUp.OpenPopUpCoroutine());
+        StartCoroutine(signInPopUp.OpenPopUpCoroutine(panelXScale, panelYScale));
     }
     public void CloseSignInPopUp()
     {
@@ -27,7 +32,7 @@ public class TitleUIManager : MonoBehaviour
     }
     public void OpenSignUpPopUp()
     {
-        StartCoroutine(signUpPopUp.OpenPopUpCoroutine());
+        StartCoroutine(signUpPopUp.OpenPopUpCoroutine(panelXScale, panelYScale));
     }
     public void CloseSignUpPopUp()
     {
@@ -35,7 +40,7 @@ public class TitleUIManager : MonoBehaviour
     }
     public void OpenAuthCodePopUp()
     {
-        StartCoroutine(authCodePopUp.OpenPopUpCoroutine());
+        StartCoroutine(authCodePopUp.OpenPopUpCoroutine(panelXScale, panelYScale));
     }
     public void CloseAuthCodePopUp()
     {

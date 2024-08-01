@@ -15,7 +15,7 @@ public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
     protected List<string> answerContents;          //答えの文字列リスト
 
     [SerializeField]
-    protected QuestionTypeEnum nextQuestionType;    //次の問題の形式
+    protected QuestionTypeEnum nextQuestionType = QuestionTypeEnum.Input;    //次の問題の形式
 
     public virtual void Enter()
     {
@@ -40,7 +40,7 @@ public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
     }
 
     //次の状態を決定する、状態列挙体のint型を返す
-    protected int DecideNextState()
+    protected DungeonStateEnum DecideNextState()
     {
         DungeonStateEnum result = DungeonStateEnum.None;
         switch (nextQuestionType)
@@ -56,7 +56,7 @@ public class BaseDungeonProcess : MonoBehaviour, StateProcessInterface
                 break;
         }
 
-        return (int)result;
+        return result;
     }
 
     //必要な情報を問題データから抜き出す

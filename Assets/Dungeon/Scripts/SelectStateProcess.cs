@@ -23,6 +23,7 @@ public class SelectStateProcess : BaseDungeonProcess
         if (buttonText.text == this.answerContents[0])
         {
             Debug.Log("True");
+            this.nextState = this.DecideNextState();
         }
         else
         {

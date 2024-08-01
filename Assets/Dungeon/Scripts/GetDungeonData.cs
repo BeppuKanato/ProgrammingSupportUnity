@@ -32,6 +32,8 @@ public class GetDungeonData : BaseSendRequest
 
         receiveData = (ReceiveData)receiveData.Deserialize(jsonData);
 
+        receiveData.FormattingQuestionType();
+
         dungeonManager.SetDungeonData(receiveData.root_key);
 
         Debug.Log(receiveData.root_key[0].question_id);
@@ -48,32 +50,25 @@ public class GetDungeonData : BaseSendRequest
         }
     }
 
-    //[Serializable]
-    //private class ReceiveData
-    //{
-    //    public int dungeon_id;
-    //    public string dungeon_name;
-    //    public string dungeon_description;
-    //    public int question_id;
-    //    public int question_type;
-    //    public string question_description;
-    //    public string question_content;
-    //    public List<string> branch_content;
-    //    public int answers_id;
-    //    public string answer_content;
-    //    public List<int> blank_number;
-    //}
-
     [Serializable]
     private class ReceiveData : BaseReceiveData
     {
         public List<DungeonDataStruct> root_key;
+        const int QUESTION_TYPE_OFFSET = 100;
 
         public override BaseReceiveData Deserialize(string jsonData)
         {
             ReceiveData receiveData = (ReceiveData)JsonUtility.FromJson<ReceiveData>(jsonData);
 
             return receiveData;
+        }
+        //question_type‚Ì’l‚ğ—ñ‹“‘Ì‚Ì”’l‚É‡‚í‚¹‚é
+        public void FormattingQuestionType()
+        {
+            for (int i = 0; i < this.root_key.Count; i++)
+            {
+                root_key[i].question_type += QUESTION_TYPE_OFFSET;
+            }
         }
     }
 }

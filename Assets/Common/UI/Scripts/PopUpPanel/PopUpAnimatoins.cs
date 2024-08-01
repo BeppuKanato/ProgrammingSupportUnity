@@ -9,12 +9,8 @@ public class PopUpAnimatoins : MonoBehaviour
 
     LerpAnims lerpScaleAnim = new LerpAnims();
 
-    float panelXScale = 0.4f;
-    float panelYScale = 0.4f;
-
-
     //ポップアップを開くアニメーション
-    public IEnumerator OpenPopUpCoroutine()
+    public IEnumerator OpenPopUpCoroutine(float panelXScale, float panelYScale)
     {
         //サイズを初期化
         popUpPanel.gameObject.transform.localScale = new Vector3(0, 0, 0);
